@@ -1,0 +1,45 @@
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+python-multipart>=0.0.12
+python-jose[cryptography]>=3.3.0
+passlib[bcrypt]>=1.7.4
+python-dotenv>=1.0.1
+
+# Database
+sqlalchemy>=2.0.35
+# psycopg2-binary==2.9.9  # Optional - only needed for PostgreSQL
+# For PostgreSQL, install: pip install psycopg2-binary (requires PostgreSQL installed)
+# System will use SQLite by default if PostgreSQL not configured
+alembic==1.13.1
+
+# ML & AI
+# llama-cpp-python==0.2.32
+# chromadb==0.4.22
+langchain==0.1.4
+langchain-community==0.0.16
+# sentence-transformers==2.3.1
+# transformers==4.36.2
+# torch>=2.6.0  # Updated for Python 3.13 compatibility
+
+# Document Processing
+pypdf==4.0.0
+python-docx==1.1.0
+beautifulsoup4==4.12.3
+markdown==3.5.2
+
+# Utilities
+pydantic>=2.10.0
+pydantic-settings>=2.7.0
+httpx==0.26.0
+aiofiles==23.2.1
+websockets==12.0
+
+# Monitoring & Logging
+loguru==0.7.2
+
+# Testing
+pytest==7.4.4
+pytest-asyncio==0.23.3
+pytest-cov==4.1.0
+httpx==0.26.0
+scikit-learn>=1.3.0

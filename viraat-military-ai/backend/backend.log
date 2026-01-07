@@ -1,0 +1,46 @@
+INFO:     Will watch for changes in these directories: ['/Users/krishnasumathi/Documents/VIRAAT 11/viraat-military-ai/backend']
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [36417] using WatchFiles
+INFO:     Started server process [36492]
+INFO:     Waiting for application startup.
+2026-01-06 10:50:22.928 | INFO     | models.llm_handler:initialize:22 - 🛠️  Algorithm-based AI handler initialized
+2026-01-06 10:50:22.928 | INFO     | models.rag_engine:initialize:30 - Initializing Algorithm-based RAG engine (TF-IDF)...
+2026-01-06 10:50:22.935 | INFO     | models.rag_engine:initialize:51 - ✓ RAG engine initialized. Indexed 65 document chunks.
+2026-01-06 10:50:22.935 | INFO     | main:startup_event:256 - Application started, database initialized, and LLM model loaded
+INFO:     Application startup complete.
+2026-01-06 10:50:32.498 | INFO     | services.auth_service:create_user:92 - Created new user: u1767676832
+INFO:     127.0.0.1:53798 - "POST /api/v1/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53800 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+2026-01-06 10:50:32.561 | DEBUG    | main:get_current_user:79 - Auth check: token='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1MTc2NzY3NjgzMiIsImV4cCI6MTc2NzY3ODYzMn0.eNWdxBQMrKGp5o3cwirfU5J4P4NfjF0JSpnJj418H8E', is_dev=True
+2026-01-06 10:50:32.564 | INFO     | models.rag_engine:search:99 - Original Query: 'Status report on M4A1' -> Expanded: 'status report on m4a1'
+2026-01-06 10:50:32.570 | INFO     | models.rag_engine:search:113 - Query: 'Status report on M4A1' - Max Sim: 0.1396
+2026-01-06 10:50:32.570 | DEBUG    | models.rag_engine:search:121 - Candidate: The **M4A1** is a 5.56×45mm NATO, gas-operated, ma... (Score: 0.1396)
+2026-01-06 10:50:32.570 | DEBUG    | models.rag_engine:search:121 - Candidate: 1. Use VPN for all remote communications 2. Enable... (Score: 0.0993)
+2026-01-06 10:50:32.570 | INFO     | models.rag_engine:search:131 - Found 2 relevant chunks for query using TF-IDF
+2026-01-06 10:50:33.071 | INFO     | controllers.visual_controller:analyze:52 - Visual intent detected for: M4A1 Carbine
+2026-01-06 10:50:33.072 | INFO     | models.llm_handler:_structure_context_response:58 - LLMHandler Received Context (503 chars). Preview: [Ref 1: weapon_systems.md, Relevance: 0.14]
+The **M4A1** is a 5.56×45mm NATO, gas-operated, magazine...
+INFO:     127.0.0.1:53802 - "POST /api/v1/chat HTTP/1.1" 200 OK
+2026-01-06 10:50:33.136 | INFO     | services.auth_service:create_user:92 - Created new user: u1767676833
+INFO:     127.0.0.1:53805 - "POST /api/v1/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53807 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+2026-01-06 10:50:33.161 | DEBUG    | main:get_current_user:79 - Auth check: token='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1MTc2NzY3NjgzMyIsImV4cCI6MTc2NzY3ODYzM30.WRbKcBhJXbtBXX6pJkoNrKODIxANaAKgDvzvE6j9gmQ', is_dev=True
+2026-01-06 10:50:33.162 | INFO     | models.rag_engine:search:99 - Original Query: 'Tell me about M4A1' -> Expanded: 'tell me about m4a1'
+2026-01-06 10:50:33.164 | INFO     | models.rag_engine:search:113 - Query: 'Tell me about M4A1' - Max Sim: 0.1974
+2026-01-06 10:50:33.164 | DEBUG    | models.rag_engine:search:121 - Candidate: The **M4A1** is a 5.56×45mm NATO, gas-operated, ma... (Score: 0.1974)
+2026-01-06 10:50:33.164 | INFO     | models.rag_engine:search:131 - Found 1 relevant chunks for query using TF-IDF
+2026-01-06 10:50:33.665 | INFO     | controllers.visual_controller:analyze:52 - Visual intent detected for: M4A1 Carbine
+2026-01-06 10:50:33.666 | INFO     | models.llm_handler:_structure_context_response:58 - LLMHandler Received Context (179 chars). Preview: [Ref 1: weapon_systems.md, Relevance: 0.20]
+The **M4A1** is a 5.56×45mm NATO, gas-operated, magazine...
+INFO:     127.0.0.1:53809 - "POST /api/v1/chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53811 - "POST /api/v1/auth/register HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:53813 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+2026-01-06 10:50:33.699 | DEBUG    | main:get_current_user:79 - Auth check: token='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1MTc2NzY3NjgzMyIsImV4cCI6MTc2NzY3ODYzM30.WRbKcBhJXbtBXX6pJkoNrKODIxANaAKgDvzvE6j9gmQ', is_dev=True
+2026-01-06 10:50:33.700 | INFO     | models.rag_engine:search:99 - Original Query: 'Show me AK-47' -> Expanded: 'show me ak-47'
+2026-01-06 10:50:33.701 | INFO     | models.rag_engine:search:113 - Query: 'Show me AK-47' - Max Sim: 0.3786
+2026-01-06 10:50:33.701 | DEBUG    | models.rag_engine:search:121 - Candidate: The **AK-47** is a gas-operated assault rifle cham... (Score: 0.3786)
+2026-01-06 10:50:33.701 | INFO     | models.rag_engine:search:131 - Found 1 relevant chunks for query using TF-IDF
+2026-01-06 10:50:34.202 | INFO     | controllers.visual_controller:analyze:52 - Visual intent detected for: AK-47 Assault Rifle
+2026-01-06 10:50:34.202 | INFO     | models.llm_handler:_structure_context_response:58 - LLMHandler Received Context (149 chars). Preview: [Ref 1: weapon_systems.md, Relevance: 0.38]
+The **AK-47** is a gas-operated assault rifle chambered ...
+INFO:     127.0.0.1:53815 - "POST /api/v1/chat HTTP/1.1" 200 OK
