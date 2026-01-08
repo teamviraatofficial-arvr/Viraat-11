@@ -1,6 +1,6 @@
 /**
  * VIRAAT 3D Visualizer
- * Uses Three.js to render procedural military equipment.
+ * Uses Three.js to render procedural military equipment or load glTF assets.
  */
 
 const VisualizerModule = {
@@ -11,6 +11,7 @@ const VisualizerModule = {
     currentMesh: null,
     animationId: null,
     isRotating: true,
+    gltfLoader: null,
     
     init() {
         this.container = document.getElementById('canvas3d');
@@ -45,7 +46,6 @@ const VisualizerModule = {
         this.scene.add(backLight);
 
         // Controls
-        // Note: OrbitControls needs to be loaded from examples. Assuming it is loaded in index.html.
         if (THREE.OrbitControls) {
             this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
             this.controls.enableDamping = true;
@@ -56,6 +56,11 @@ const VisualizerModule = {
         const gridHelper = new THREE.GridHelper(20, 20, 0x2a3555, 0x141b36);
         this.scene.add(gridHelper);
 
+        // glTF Loader
+        if (typeof THREE.GLTFLoader !== 'undefined') {
+            this.gltfLoader = new THREE.GLTFLoader();
+        }
+
         // UI Bindings
         document.getElementById('closeVisualBtn')?.addEventListener('click', () => this.hide());
         document.getElementById('rotateBtn')?.addEventListener('click', (e) => {
@@ -64,8 +69,16 @@ const VisualizerModule = {
         });
         document.getElementById('wireframeBtn')?.addEventListener('click', (e) => {
             if(this.currentMesh) {
-                this.currentMesh.material.wireframe = !this.currentMesh.material.wireframe;
-                e.target.classList.toggle('active', this.currentMesh.material.wireframe);
+                this.currentMesh.traverse((child) => {
+                    if (child.isMesh) {
+                        if (Array.isArray(child.material)) {
+                            child.material.forEach(m => m.wireframe = !m.wireframe);
+                        } else {
+                            child.material.wireframe = !child.material.wireframe;
+                        }
+                    }
+                });
+                e.target.classList.toggle('active', this.isWireframe());
             }
         });
 
@@ -75,15 +88,56 @@ const VisualizerModule = {
         this.animate();
     },
 
-    loadModel(modelId, modelName) {
+    isWireframe() {
+        if(!this.currentMesh) return false;
+        let isWireframe = false;
+        this.currentMesh.traverse((child) => {
+            if (child.isMesh && child.material) {
+                isWireframe = Array.isArray(child.material) ? child.material[0].wireframe : child.material.wireframe;
+            }
+        });
+        return isWireframe;
+    },
+
+    loadModel(modelId, modelName, assetPath) {
         this.show();
         this.clearScene();
         
         document.getElementById('modelLabel').textContent = `System: ${modelName || modelId}`;
         console.log(`Loading 3D Model: ${modelId}`);
 
+        // Try to load glTF asset first if path provided
+        if (assetPath && this.gltfLoader) {
+            console.log(`Loading glTF from: ${assetPath}`);
+            this.gltfLoader.load(
+                assetPath,
+                (gltf) => {
+                    this.currentMesh = gltf.scene;
+                    this.scene.add(this.currentMesh);
+                    // Center and scale
+                    const bbox = new THREE.Box3().setFromObject(this.currentMesh);
+                    const size = bbox.getSize(new THREE.Vector3());
+                    const maxDim = Math.max(size.x, size.y, size.z);
+                    const scale = 2.0 / maxDim;
+                    this.currentMesh.scale.multiplyScalar(scale);
+                    const center = bbox.getCenter(new THREE.Vector3());
+                    this.currentMesh.position.sub(center.multiplyScalar(scale));
+                    console.log('glTF model loaded successfully');
+                },
+                undefined,
+                (error) => {
+                    console.warn(`Failed to load glTF: ${error.message}. Falling back to procedural generation.`);
+                    this.loadProceduralModel(modelId);
+                }
+            );
+        } else {
+            // Fallback to procedural generation
+            this.loadProceduralModel(modelId);
+        }
+    },
+
+    loadProceduralModel(modelId) {
         // PROCEDURAL GENERATION FACTORY
-        // Since we don't have .glb assets, we build them with code.
         let mesh;
         
         if (modelId === 'ak47' || modelId === 'm4a1' || modelId === 'dlq33') {

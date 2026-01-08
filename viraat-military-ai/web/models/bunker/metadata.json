@@ -1,0 +1,11 @@
+{
+  "model_id": "bunker",
+  "model_name": "Reinforced Bunker",
+  "source": "antigravity",
+  "safety_level": "educational",
+  "created": "2026-01-08",
+  "triangle_count": 36,
+  "lod_count": 2,
+  "nodes": ["body", "accessory_1", "accessory_2"],
+  "safety_note": "This model is for educational/visualization use only; operational details withheld."
+}

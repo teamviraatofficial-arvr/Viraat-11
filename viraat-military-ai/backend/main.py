@@ -223,6 +223,28 @@ async def chat(request: ChatRequest, current_user: User = Depends(get_current_us
     # Get LLM response
     response_text = await llm_handler.generate_response(request.query, context, history)
     
+    # Extract visual directive (backend now produces structured JSON)
+    visual_directive = None
+    
+    # Check if response contains visual marker (legacy support)
+    if "[VISUAL_DIRECTIVE:" in response_text:
+        marker_idx = response_text.index("[VISUAL_DIRECTIVE:")
+        end_idx = response_text.rfind("]")
+        if end_idx > marker_idx:
+            try:
+                import json as json_module
+                json_str = response_text[marker_idx+17:end_idx]
+                visual_directive = json_module.loads(json_str)
+                response_text = response_text[:marker_idx].strip()
+            except Exception:
+                pass
+    
+    # Alternatively, analyze query for visual intent
+    if not visual_directive:
+        visual_intent = visual_controller.analyze(request.query)
+        if visual_intent:
+            visual_directive = visual_intent
+    
     # Log user message
     if request.conversation_id:
         conversation_service.add_message(db, request.conversation_id, "user", request.query)
@@ -239,7 +261,11 @@ async def chat(request: ChatRequest, current_user: User = Depends(get_current_us
         rag_sources_used=sources_count
     )
     
-    return {"response": response_text, "sources_count": sources_count}
+    return {
+        "response": response_text,
+        "sources_count": sources_count,
+        "visual_directive": visual_directive
+    }
 
 @app.get("/api/v1/analytics/dashboard")
 async def get_analytics(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):

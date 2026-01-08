@@ -318,41 +318,28 @@ const ChatModule = {
             this.removeTypingIndicator();
             
             // Add assistant response
-            // Robust parsing for Visual Directive
+            // Parse structured visual_directive from response
             let displayText = response.response;
-            const marker = '[VISUAL_DIRECTIVE:';
-            const markerIndex = displayText.indexOf(marker);
-            
-            if (markerIndex !== -1) {
-                // Found the marker
-                const directiveStart = markerIndex + marker.length;
-                const directiveEnd = displayText.lastIndexOf(']'); // Assuming it's at the end
-                
-                if (directiveEnd > directiveStart) {
-                    const jsonStr = displayText.substring(directiveStart, directiveEnd);
-                    
-                    // Remove the entire block from visible text including marker and brackets
-                    // We remove from markerIndex to the end (or specific closing bracket if we want to be safe)
-                    // But usually the directive is appended at the end.
-                    displayText = displayText.substring(0, markerIndex).trim();
-                    
-                    if (window.VisualizerModule) {
-                        try {
-                            const directive = JSON.parse(jsonStr);
-                            console.log("Visual Directive Found:", directive);
-                            // Delay slightly to ensure UI update
-                            setTimeout(() => {
-                                window.VisualizerModule.loadModel(directive.model_id, directive.model_name);
-                            }, 100);
-                        } catch (e) {
-                            console.error("Failed to parse visual directive JSON", e);
-                            console.log("Raw JSON string:", jsonStr);
-                        }
-                    }
-                }
-            }
+            const visual_directive = response.visual_directive;
             
             this.addMessageToUI('assistant', displayText);
+            
+            // Handle visual directive if present
+            if (visual_directive && window.VisualizerModule) {
+                try {
+                    console.log("Visual Directive Found:", visual_directive);
+                    // Delay slightly to ensure UI update
+                    setTimeout(() => {
+                        window.VisualizerModule.loadModel(
+                            visual_directive.model_id,
+                            visual_directive.model_name,
+                            visual_directive.asset_path
+                        );
+                    }, 100);
+                } catch (e) {
+                    console.error("Failed to process visual directive", e);
+                }
+            }
             
             // Update conversation in list
             // Update conversation in list
